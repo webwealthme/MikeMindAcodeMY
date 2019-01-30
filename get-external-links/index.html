@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Get All External links From Websites</title>
+</head>
+<body>
+<h3>Type Websites To Get External Links and Anchor Tags</h3>
+<form>
+    <textarea name="sitesinput" id="sitesinput" style="width:50%; height:100px;"></textarea>
+    <input type="submit" id="submit" value="submit">
+</form>
+<div id="response"></div>
+
+<script>
+var globalarr = [];
+function reqListener(){
+    var output = "";
+    
+    output = this.response.getElementsByTagName("a");
+//console.log(output);
+for (link of output){
+    console.log(link.href);
+    console.log(link.innerText);
+    console.log(link.baseURI);
+
+    if(!link.href.includes(link.baseURI)){
+    document.getElementById("response").innerHTML += `
+    <p>Site: ${link.baseURI} <br> Link: ${link.href} <br> Anchor Text: ${link.innerText}</p>
+    `;
+
+    globalarr.push([link.baseURI, link.href, link.innerText ]);
+    }
+}
+console.log(globalarr);
+}
+
+document.getElementById("submit").addEventListener("click", function(event) {
+    event.preventDefault();
+
+var sitesArray = document.getElementById("sitesinput").value.split('\n');
+console.log(sitesArray);
+//alert(sitesArray);
+//document.getElementById("response").innerText = sitesArray;
+
+for (site of sitesArray){
+    console.log(site);
+
+var AJAX = new XMLHttpRequest();
+AJAX.addEventListener("load", reqListener)
+AJAX.open("GET", site);
+AJAX.responseType = "document";
+AJAX.send();
+
+
+}
+
+})
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
